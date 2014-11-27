@@ -54,18 +54,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    Item item = new Item();
-    item.Text = "すばらしいアイテム";
-    mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
-        public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
-            if (exception == null) {
-                // Insert succeeded
-            } else {
-                // Insert failed
-            }
-        }
-    });
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,9 +85,25 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.button2:
                 textView2.setText(Integer.toString(++incrementNum));
-                Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.button3:
+                Item item = new Item();
+                item.Text = "すばらしいアイテム";
+                item.Steps = incrementNum;
+                mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
+                    public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
+                        if (exception == null) {
+                            // Insert succeeded
+                            incrementNum = 0;
+                            textView2.setText(Integer.toString(incrementNum));
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Insert failed
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
                 break;
         }
     }
