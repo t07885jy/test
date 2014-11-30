@@ -6,4 +6,5 @@ package com.example.yoshidaj.stepscounter;
 public class Item {
     public String Id;
     public String Text;
+    public int Steps;
 }
