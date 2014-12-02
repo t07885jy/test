@@ -28,7 +28,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Button 1"
+        android:text="Buttonnnn"
         android:id="@+id/button"
         android:layout_alignBottom="@id/editText"
         android:layout_alignEnd="@id/textView" />

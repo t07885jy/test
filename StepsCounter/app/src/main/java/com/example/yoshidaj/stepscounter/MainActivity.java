@@ -17,9 +17,8 @@ import com.microsoft.windowsazure.mobileservices.*;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
-
     private EditText editText;
-    private Button addButton1;
+    private Button button;
 
     private MobileServiceClient mClient;
 
@@ -38,14 +37,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
 
         editText = (EditText) findViewById(R.id.editText);
-        addButton1 = (Button) findViewById(R.id.button);
+        button = (Button) findViewById(R.id.button);
 
         textView2 = (TextView) findViewById(R.id.textView2);
         incrementButton = (Button) findViewById(R.id.incrementButton);
         textView3 = (TextView) findViewById(R.id.textView3);
         submitButton = (Button) findViewById(R.id.submitButton);
 
-        addButton1.setOnClickListener(this);
+        button.setOnClickListener(this);
         incrementButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
 
