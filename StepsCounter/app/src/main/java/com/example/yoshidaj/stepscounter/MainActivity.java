@@ -1,4 +1,4 @@
-﻿package com.example.yoshidaj.stepscounter;
+package com.example.yoshidaj.stepscounter;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.*;
 
-import java.net.MalformedURLException;
+import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private TextView textView2;
     private Button incrementButton;
 
-    private Button addButton2;
+    private Button submitButton;
 
     int num = 0;
     int incrementNum = 0;
@@ -39,12 +39,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
         editText = (EditText) findViewById(R.id.editText);
         addButton1 = (Button) findViewById(R.id.button);
         textView2 = (TextView) findViewById(R.id.textView2);
-        incrementButton = (Button) findViewById(R.id.button2);
-        addButton2 = (Button) findViewById(R.id.button3);
+        incrementButton = (Button) findViewById(R.id.incrementButton);
+        submitButton = (Button) findViewById(R.id.submitButton);
 
         addButton1.setOnClickListener(this);
         incrementButton.setOnClickListener(this);
-        addButton2.setOnClickListener(this);
+        submitButton.setOnClickListener(this);
 
         textView2.setText(Integer.toString(incrementNum));
 
@@ -73,7 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -84,11 +83,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 num = Integer.parseInt(String.valueOf(editText.getText()));
                 Toast.makeText(this, num+" AddButtonPushed", Toast.LENGTH_LONG).show();
                 break;
-            case R.id.button2:
+            case R.id.incrementButton:
                 textView2.setText(Integer.toString(++incrementNum));
                 //Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
                 break;
-            case R.id.button3:
+            case R.id.submitButton:
                 Item item = new Item();
                 item.Text = "すばらしいアイテム";
                 item.Steps = incrementNum;
@@ -103,8 +102,31 @@ public class MainActivity extends Activity implements View.OnClickListener{
                             // Insert failed
                             Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_LONG).show();
                         }
+
+                        MobileServiceTable<Item> items = mClient.getTable(Item.class);
+
+                        //mClient.getTable(Item.class).where().eq("2014-12-01").select("Steps").execute();
+
+                        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
+                            @Override
+                            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
+                                int total = 0;
+                                for (Item i : result) {
+                                    total += i.Steps;
+                                }
+
+                                final int finalTotal = total;
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
+
                 break;
         }
     }
