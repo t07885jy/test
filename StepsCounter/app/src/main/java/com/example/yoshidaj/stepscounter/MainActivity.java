@@ -31,7 +31,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     int num = 0;
     int incrementNum = 0;
-    //int totalNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,28 +57,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             e.printStackTrace();
         }
         this.getSteps();
-        /*
-        MobileServiceTable<Item> items = mClient.getTable(Item.class);
-
-        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
-            @Override
-            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
-                int total = 0;
-                for (Item i : result) {
-                    total += i.Steps;
-                }
-
-                final int finalTotal = total;
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
-                        textView3.setText(Integer.toString(finalTotal));
-                    }
-                });
-            }
-        });*/
-
     }
 
     public void getSteps(){
@@ -153,26 +130,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                             // Insert failed
                             Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_LONG).show();
                         }
-                        /*
-                        MobileServiceTable<Item> items = mClient.getTable(Item.class);
-
-                        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
-                            @Override
-                            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
-                                int total = 0;
-                                for (Item i : result) {
-                                    total += i.Steps;
-                                }
-
-                                final int finalTotal = total;
-                                MainActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                        });*/
                     }
                 });
                 break;
