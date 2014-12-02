@@ -18,18 +18,20 @@ import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
-    private MobileServiceClient mClient;
-
     private EditText editText;
     private Button addButton1;
+
+    private MobileServiceClient mClient;
 
     private TextView textView2;
     private Button incrementButton;
 
+    private TextView textView3;
     private Button submitButton;
 
     int num = 0;
     int incrementNum = 0;
+    //int totalNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         editText = (EditText) findViewById(R.id.editText);
         addButton1 = (Button) findViewById(R.id.button);
+
         textView2 = (TextView) findViewById(R.id.textView2);
         incrementButton = (Button) findViewById(R.id.incrementButton);
+        textView3 = (TextView) findViewById(R.id.textView3);
         submitButton = (Button) findViewById(R.id.submitButton);
 
         addButton1.setOnClickListener(this);
@@ -53,6 +57,52 @@ public class MainActivity extends Activity implements View.OnClickListener{
         } catch (Throwable e) {
             e.printStackTrace();
         }
+        this.getSteps();
+        /*
+        MobileServiceTable<Item> items = mClient.getTable(Item.class);
+
+        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
+            @Override
+            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
+                int total = 0;
+                for (Item i : result) {
+                    total += i.Steps;
+                }
+
+                final int finalTotal = total;
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
+                        textView3.setText(Integer.toString(finalTotal));
+                    }
+                });
+            }
+        });*/
+
+    }
+
+    public void getSteps(){
+        MobileServiceTable<Item> items = mClient.getTable(Item.class);
+
+        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
+            @Override
+            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
+                int total = 0;
+                for (Item i : result) {
+                    total += i.Steps;
+                }
+
+                final int finalTotal = total;
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
+                        textView3.setText("Total Steps : "+Integer.toString(finalTotal)+" 歩");
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -98,14 +148,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
                             incrementNum = 0;
                             textView2.setText(Integer.toString(incrementNum));
                             Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_LONG).show();
+                            getSteps();
                         } else {
                             // Insert failed
                             Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_LONG).show();
                         }
-
+                        /*
                         MobileServiceTable<Item> items = mClient.getTable(Item.class);
-
-                        //mClient.getTable(Item.class).where().eq("2014-12-01").select("Steps").execute();
 
                         items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
                             @Override
@@ -123,10 +172,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
                                     }
                                 });
                             }
-                        });
+                        });*/
                     }
                 });
-
                 break;
         }
     }
