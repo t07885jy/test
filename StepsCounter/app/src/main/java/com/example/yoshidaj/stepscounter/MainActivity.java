@@ -33,6 +33,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
     int num = 0;
     int incrementNum = 0;
 
+    Calendar calendar;
+    String today;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         textView2.setText(Integer.toString(incrementNum));
 
+        calendar = Calendar.getInstance();
+        today = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+
         try {
             mClient = new MobileServiceClient("https://mycounter.azure-mobile.net/", "RiIzLgCjTIunvogUaAVZbgMiCRnpaJ39", this);
         } catch (Throwable e) {
@@ -64,7 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         MobileServiceTable<Item> items = mClient.getTable(Item.class);
         //items.where().field("Text").eq("すばらしいアイテム").select("Steps")
 
-        items.where().field("Text").eq("2014-12-8").select("Steps").execute(new TableQueryCallback<Item>() {
+        items.where().field("Text").eq(today).select("Steps").execute(new TableQueryCallback<Item>() {
             @Override
             public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
                 int total = 0;
@@ -117,12 +123,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 //Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.submitButton:
-                Calendar calendar = Calendar.getInstance();
-                String today = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
-
                 Item item = new Item();
-                //item.Text = "すばらしいアイテム";
-                item.Text = today;
+                item.Text = "すばらしいアイテム";
+                item.Date = today;
                 item.Steps = incrementNum;
                 mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
                     public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
