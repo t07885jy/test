@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.*;
 
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +27,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private Button incrementButton;
 
     private TextView textView3;
+    private TextView textView4;
+    private TextView textView5;
     private Button submitButton;
 
     int num = 0;
@@ -47,6 +48,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         textView2 = (TextView) findViewById(R.id.textView2);
         incrementButton = (Button) findViewById(R.id.incrementButton);
         textView3 = (TextView) findViewById(R.id.textView3);
+        textView4 = (TextView) findViewById(R.id.textView4);
+        textView5 = (TextView) findViewById(R.id.textView5);
+
         submitButton = (Button) findViewById(R.id.submitButton);
 
         button.setOnClickListener(this);
@@ -68,9 +72,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     public void getSteps(){
         MobileServiceTable<Item> items = mClient.getTable(Item.class);
-        //items.where().field("Text").eq("すばらしいアイテム").select("Steps")
 
-        items.where().field("Text").eq(today).select("Steps").execute(new TableQueryCallback<Item>() {
+        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
             @Override
             public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
                 int total = 0;
@@ -84,6 +87,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     public void run() {
                         //Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
                         textView3.setText("Total Steps : "+Integer.toString(finalTotal)+" 歩");
+                        textView5.setText("Total Cost : "+(finalTotal*21)+"円");
+                    }
+                });
+            }
+        });
+
+        items.where().field("Date").eq(today).select("Steps").execute(new TableQueryCallback<Item>() {
+            @Override
+            public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
+                int totalToday = 0;
+                for (Item i : result) {
+                    totalToday += i.Steps;
+                }
+
+                final int finalTotal = totalToday;
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Toast.makeText(MainActivity.this, "Steps: " + finalTotal, Toast.LENGTH_LONG).show();
+                        textView4.setText("今日の歩数 : "+Integer.toString(finalTotal)+" 歩");
                     }
                 });
             }
