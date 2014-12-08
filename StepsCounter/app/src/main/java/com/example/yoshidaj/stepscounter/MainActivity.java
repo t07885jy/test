@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.*;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
@@ -60,8 +62,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     public void getSteps(){
         MobileServiceTable<Item> items = mClient.getTable(Item.class);
+        //items.where().field("Text").eq("すばらしいアイテム").select("Steps")
 
-        items.where().field("Text").eq("すばらしいアイテム").select("Steps").execute(new TableQueryCallback<Item>() {
+        items.where().field("Text").eq("2014-12-8").select("Steps").execute(new TableQueryCallback<Item>() {
             @Override
             public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
                 int total = 0;
@@ -114,8 +117,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 //Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.submitButton:
+                Calendar calendar = Calendar.getInstance();
+                String today = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+
                 Item item = new Item();
-                item.Text = "すばらしいアイテム";
+                //item.Text = "すばらしいアイテム";
+                item.Text = today;
                 item.Steps = incrementNum;
                 mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
                     public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
