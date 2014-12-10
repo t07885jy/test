@@ -1,6 +1,7 @@
 package com.example.yoshidaj.stepscounter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Menu;
@@ -41,7 +42,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         button = (Button) findViewById(R.id.toMapViewButton);
 
         textView2 = (TextView) findViewById(R.id.textView2);
@@ -79,7 +79,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 for (Item i : result) {
                     total += i.Steps;
                 }
-
                 final int finalTotal = total;
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
@@ -99,7 +98,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 for (Item i : result) {
                     totalToday += i.Steps;
                 }
-
                 final int finalTotal = totalToday;
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
@@ -125,9 +123,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent = new Intent();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //Toast.makeText(this, "settings selected", Toast.LENGTH_LONG).show();
+            return true;
+        }else if(id == R.id.action_main){
+            //Toast.makeText(this, "Main Page selected", Toast.LENGTH_LONG).show();
+            return true;
+        }else if(id == R.id.action_profile){
+            //Toast.makeText(this, "profile selected", Toast.LENGTH_LONG).show();
+            intent.setClassName("com.example.yoshidaj.stepscounter", "com.example.yoshidaj.stepscounter.ProfileActivity");
+            //intent.putExtra();
+            startActivity(intent);
+            return true;
+        }else if(id == R.id.action_ranking){
+            Toast.makeText(this, "ranking selected", Toast.LENGTH_LONG).show();
+            return true;
+        }else if(id == R.id.action_facebook){
+            Toast.makeText(this, "facebook selected", Toast.LENGTH_LONG).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -167,15 +182,3 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 }
-/*
-android:layout_alignBottom="@id/editText"
-
-<EditText
-android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_marginTop="34dp"
-        android:layout_below="@id/textView" />
-*/
