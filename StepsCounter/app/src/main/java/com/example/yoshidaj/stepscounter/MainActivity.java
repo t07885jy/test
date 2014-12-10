@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
-    private EditText editText;
     private Button button;
 
     private MobileServiceClient mClient;
@@ -42,8 +41,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editText = (EditText) findViewById(R.id.editText);
-        button = (Button) findViewById(R.id.button);
+
+        button = (Button) findViewById(R.id.toMapViewButton);
 
         textView2 = (TextView) findViewById(R.id.textView2);
         incrementButton = (Button) findViewById(R.id.incrementButton);
@@ -137,8 +136,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.button:
-                num = Integer.parseInt(String.valueOf(editText.getText()));
+            case R.id.toMapViewButton:
+                //num = Integer.parseInt(String.valueOf(editText.getText()));
                 Toast.makeText(this, num+" AddButtonPushed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.incrementButton:
@@ -168,3 +167,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 }
+/*
+android:layout_alignBottom="@id/editText"
+
+<EditText
+android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_marginTop="34dp"
+        android:layout_below="@id/textView" />
+*/

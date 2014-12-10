@@ -16,30 +16,14 @@
         android:layout_marginTop="33dp"
         android:textSize="25dp" />
 
-    <EditText
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_marginTop="34dp"
-        android:layout_below="@id/textView" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Buttonnnn"
-        android:id="@+id/button"
-        android:layout_alignBottom="@id/editText"
-        android:layout_alignEnd="@id/textView" />
-
     <TextView
         android:layout_width="130dp"
         android:layout_height="30dp"
         android:id="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
-        android:gravity="center" />
+        android:layout_marginTop="39dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -47,16 +31,7 @@
         android:text="Increment"
         android:id="@+id/incrementButton"
         android:layout_alignBottom="@id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@id/button" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit Button"
-        android:id="@+id/submitButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true"/>
 
     <TextView
         android:layout_width="fill_parent"
@@ -88,5 +63,24 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:height="40dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Button"
+        android:id="@+id/submitButton"
+        android:layout_below="@+id/textView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MapView"
+        android:id="@+id/toMapViewButton"
+
+        android:layout_below="@+id/submitButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp" />
 
 </RelativeLayout>
