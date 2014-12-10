@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }else if(id == R.id.action_profile){
             //Toast.makeText(this, "profile selected", Toast.LENGTH_LONG).show();
             intent.setClassName("com.example.yoshidaj.stepscounter", "com.example.yoshidaj.stepscounter.ProfileActivity");
-            //intent.putExtra();
+            intent.putExtra("KeyWord", "moved to Profile Page");
             startActivity(intent);
             return true;
         }else if(id == R.id.action_ranking){

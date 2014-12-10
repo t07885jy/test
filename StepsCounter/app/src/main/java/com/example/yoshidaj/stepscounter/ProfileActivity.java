@@ -5,15 +5,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ProfileActivity extends Activity {
+
+
+    @InjectView(R.id.textView6)
+    TextView mTextView6;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        ButterKnife.inject(this);
+
+        mTextView6.setText("Profile");
+        intent = getIntent();
+        String str = intent.getStringExtra("KeyWord");
+        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
     }
 
 
@@ -35,16 +51,19 @@ public class ProfileActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.action_profile){
-            //Toast.makeText(this, "profile selected", Toast.LENGTH_LONG).show();
-            intent.setClassName("com.example.yoshidaj.stepscounter", "com.example.yoshidaj.stepscounter.ProfileActivity");
+        } else if (id == R.id.action_main) {
+            //Toast.makeText(this, "Main Page selected", Toast.LENGTH_LONG).show();
+            intent.setClassName("com.example.yoshidaj.stepscounter", "com.example.yoshidaj.stepscounter.MainActivity");
             //intent.putExtra();
             startActivity(intent);
             return true;
-        }else if(id == R.id.action_ranking){
+        } else if (id == R.id.action_profile) {
+            //Toast.makeText(this, "profile selected", Toast.LENGTH_LONG).show();
+            return true;
+        } else if (id == R.id.action_ranking) {
             Toast.makeText(this, "ranking selected", Toast.LENGTH_LONG).show();
             return true;
-        }else if(id == R.id.action_facebook){
+        } else if (id == R.id.action_facebook) {
             Toast.makeText(this, "facebook selected", Toast.LENGTH_LONG).show();
             return true;
         }
