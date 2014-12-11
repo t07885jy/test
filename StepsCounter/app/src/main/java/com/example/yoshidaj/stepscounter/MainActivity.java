@@ -19,9 +19,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
-    private Button button;
 
-    private MobileServiceClient mClient;
+    private  MobileServiceClient mClient;
 
     private TextView textView2;
     private Button incrementButton;
@@ -30,8 +29,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private TextView textView4;
     private TextView textView5;
     private Button submitButton;
+    private Button toMapViewButton;
 
-    int num = 0;
     int incrementNum = 0;
 
     Calendar calendar;
@@ -42,8 +41,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = (Button) findViewById(R.id.toMapViewButton);
-
         textView2 = (TextView) findViewById(R.id.textView2);
         incrementButton = (Button) findViewById(R.id.incrementButton);
         textView3 = (TextView) findViewById(R.id.textView3);
@@ -51,10 +48,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
         textView5 = (TextView) findViewById(R.id.textView5);
 
         submitButton = (Button) findViewById(R.id.submitButton);
+        toMapViewButton = (Button) findViewById(R.id.toMapViewButton);
 
-        button.setOnClickListener(this);
         incrementButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
+        toMapViewButton.setOnClickListener(this);
 
         textView2.setText(Integer.toString(incrementNum));
 
@@ -152,12 +150,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.toMapViewButton:
-                //num = Integer.parseInt(String.valueOf(editText.getText()));
-                Toast.makeText(this, num+" AddButtonPushed", Toast.LENGTH_LONG).show();
+
                 break;
             case R.id.incrementButton:
                 textView2.setText(Integer.toString(++incrementNum));
-                //Toast.makeText(this, incrementNum+" IncrementButtonPushed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.submitButton:
                 Item item = new Item();
