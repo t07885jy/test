@@ -17,6 +17,8 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableQueryCallback;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -59,7 +61,8 @@ public class ProfileActivity extends Activity {
     Intent intent;
     Calendar calendar;
     String today;
-    Date dat;
+    Date date;
+    DateFormat df;
 
     int nowTabacco;
     int pastTabacco;
@@ -77,17 +80,15 @@ public class ProfileActivity extends Activity {
         mTextView6.setText("Profile");
         intent = getIntent();
         String str = intent.getStringExtra("KeyWord");
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
 
-        calendar = Calendar.getInstance();
-        today = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+        //calendar = Calendar.getInstance();
+        //today = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
 
         try {
             mClient = new MobileServiceClient("https://mycounter.azure-mobile.net/", "RiIzLgCjTIunvogUaAVZbgMiCRnpaJ39", this);
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        //dat = new Date();
     }
 
     @OnClick(R.id.getDataButton)
