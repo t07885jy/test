@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.microsoft.windowsazure.mobileservices.TableOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableQueryCallback;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -55,7 +57,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
     private TextView textView4;
     private TextView textView5;
     private Button submitButton;
-    private Button toMapViewButton;
 
     int incrementNum = 0;
 
@@ -70,15 +71,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
     private Location netLoc;
     private Location gpsLoc;
 
-    private Button button;
-    private Button button2;
-
-    LatLng defaultCurrent;
-
-    private MapView mapView;
-    GoogleMap googleMap;
     private final static String API_KEY = "AIzaSyDF_s1typK1Z5UzldTadOp_RJxPc0pbROk";
 
+    private int targetLocalX;
+    private int targetLocalY;
+    private int screenX;
+    private int screenY;
+    private int defLeft;
+    private int defTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +91,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
         textView5 = (TextView) findViewById(R.id.textView5);
-
         submitButton = (Button) findViewById(R.id.submitButton);
-        toMapViewButton = (Button) findViewById(R.id.toMapViewButton);
 
         incrementButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
-        toMapViewButton.setOnClickListener(this);
-
         textView2.setText(Integer.toString(incrementNum));
 
         date = new Date(System.currentTimeMillis());
@@ -113,7 +109,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
         this.onLocationChanged(netLoc);
         gpsLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         this.onLocationChanged(gpsLoc);
-
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
@@ -130,14 +125,32 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
 
     @OnTouch(R.id.imageButton)
     public boolean touchButton(View v, MotionEvent event){
+        int x = (int)event.getRawX();
+        int y = (int)event.getRawY();
+
         switch(event.getAction()){
-            case MotionEvent.ACTION_MOVE:
-                //Toast.makeText(this, "Move", Toast.LENGTH_LONG).show();
-                break;
             case MotionEvent.ACTION_DOWN:
                 //Toast.makeText(this, "Down", Toast.LENGTH_SHORT).show();
+                targetLocalX = defLeft = mImageButton.getLeft();
+                targetLocalY = defTop = mImageButton.getTop();
+                screenX = x;
+                screenY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                //Toast.makeText(this, "Move", Toast.LENGTH_LONG).show();
+                int diffX = screenX - x;
+                int diffY = screenY - y;
+                targetLocalX -= diffX;
+                targetLocalY -= diffY;
+                mImageButton.layout(targetLocalX,
+                        targetLocalY,
+                        targetLocalX + mImageButton.getWidth(),
+                        targetLocalY + mImageButton.getHeight());
+                screenX = x;
+                screenY = y;
                 break;
             case MotionEvent.ACTION_UP:
+                /*
                 final AlertDialog.Builder adBuilder = new AlertDialog.Builder(this);
                 adBuilder.setTitle("Message");
                 adBuilder.setMessage("本当にタバコを吸いますか？");
@@ -148,6 +161,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
                         //Add button clicked
                         incrementNum++;
                         mImageButton.setVisibility(View.INVISIBLE);
+                        TranslateAnimation translate = new TranslateAnimation(200, 0, 200, 0);
+                        translate.setDuration(500);
+                        mImageButton.startAnimation(translate);
                         CountDownTimer cdt = new CountDownTimer(5000, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
@@ -162,7 +178,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
 
                         Item item = new Item();
                         item.Text = "すばらしいアイテム";
-                        //item.DateToday = date;
+                        item.DateToday = date;
                         item.Steps = incrementNum;
                         mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
                             public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
@@ -185,8 +201,43 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
                         //Decline button clicked
                     }
                 });
-                adBuilder.show();
+                adBuilder.show();*/
                 //Toast.makeText(this, "Up", Toast.LENGTH_LONG).show();
+
+                mImageButton.setVisibility(View.INVISIBLE);
+
+                CountDownTimer cdt = new CountDownTimer(3000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+                    @Override
+                    public void onFinish() {
+                        mImageButton.layout(defLeft,
+                                defTop,
+                                defLeft+ mImageButton.getWidth(),
+                                defTop + mImageButton.getHeight());
+                        mImageButton.setVisibility(View.VISIBLE);
+                    }
+                }.start();
+
+                Item item = new Item();
+                item.Text = "すばらしいアイテム";
+                //item.DateToday = date;
+                incrementNum++;
+                item.Steps = incrementNum;
+                mClient.getTable(Item.class).insert(item, new TableOperationCallback<Item>() {
+                    public void onCompleted(Item entity, Exception exception, ServiceFilterResponse response) {
+                        if (exception == null) {
+                            // Insert succeeded
+                            incrementNum = 0;
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_LONG).show();
+                            getSteps();
+                        } else {
+                            // Insert failed
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
                 break;
         }
         return true;
@@ -268,9 +319,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.toMapViewButton:
-
-                break;
             case R.id.incrementButton:
                 //textView2.setText(Integer.toString(++incrementNum));
                 break;
