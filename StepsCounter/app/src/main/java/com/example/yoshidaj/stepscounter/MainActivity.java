@@ -263,8 +263,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Loca
                 });
             }
         });
+        //items.where().field("Date").eq(date).select("Steps")
 
-        items.where().field("Date").eq(date).select("Steps").execute(new TableQueryCallback<Item>() {
+        items.where().day("_createdAt").eq(12).select("Steps").execute(new TableQueryCallback<Item>() {
             @Override
             public void onCompleted(List<Item> result, int count, Exception exception, ServiceFilterResponse response) {
                 int totalToday = 0;
