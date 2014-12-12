@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -18,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceTable;
@@ -36,7 +40,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener, LocationListener {
 
     @InjectView(R.id.imageButton)
     ImageButton mImageButton;
@@ -58,7 +62,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Calendar calendar;
     //String today;
     Date date;
-    /*
+
     private LocationManager locationManager;
 
     private LocationRequest locationRequest;
@@ -75,7 +79,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     GoogleMap googleMap;
     private final static String API_KEY = "AIzaSyDF_s1typK1Z5UzldTadOp_RJxPc0pbROk";
 
-    */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +104,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
         date = new Date(System.currentTimeMillis());
         //df = new SimpleDateFormat("yyyy/MM/dd");
         //Toast.makeText(this, dat.toString(), Toast.LENGTH_LONG).show();
-
         //calendar = Calendar.getInstance();
         //today = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        netLoc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        this.onLocationChanged(netLoc);
+        gpsLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        this.onLocationChanged(gpsLoc);
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         try {
             mClient = new MobileServiceClient("https://mycounter.azure-mobile.net/", "RiIzLgCjTIunvogUaAVZbgMiCRnpaJ39", this);
@@ -209,7 +225,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void run() {
                         textView4.setText("今日の歩数 : " + Integer.toString(finalTotal) + " 歩");
-                        mTextView10.setText(Integer.toString(finalTotal) + " / 目標の本数");
+                        mTextView10.setText(Integer.toString(finalTotal) + " / 目標の本数 "+"Latitude: "+String.valueOf(currentBestLocation.getLatitude())+" & Longitude: "+String.valueOf(currentBestLocation.getLongitude()));
                     }
                 });
             }
@@ -279,5 +295,42 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 });*/
                 break;
         }
+    }
+
+    public void onStart(){
+        if(locationManager != null){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+        super.onResume();
+    }
+
+    public void onStop(){
+        if(locationManager != null){
+            locationManager.removeUpdates(this);
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            if (currentBestLocation == null) {
+                currentBestLocation = location;
+                //textView.setText("Latitude: "+String.valueOf(location.getLatitude())+"\nLongitude: "+String.valueOf(location.getLongitude()));
+            } else if (location.getTime() > currentBestLocation.getTime()) {
+                if (location.getAccuracy() > currentBestLocation.getAccuracy()) {
+                    currentBestLocation = location;
+                }
+            }
+        }
+    }
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+    @Override
+    public void onProviderDisabled(String provider) {
     }
 }
